@@ -1,42 +1,38 @@
 import React, { useContext } from "react";
+import { MyStore } from "./Context/MyContext";
 import LoginForm from "./components/LoginForm";
 import RegisterForm from "./components/RegisterForm";
 import UserCard from "./components/UserCard";
-import { MyStore } from "./Context/MyContext";
 
 const App = () => {
-  const { currentUser, toggle, userData, theme, setTheme } =
-    useContext(MyStore);
-
-  const themeClass = theme === "dark" ? "dark-theme" : "light-theme";
+  const { toggle, theme, setTheme, currentUser } = useContext(MyStore);
 
   return (
     <div
-      className={`app-root min-h-screen p-4 sm:p-8 md:p-10 flex flex-col items-center gap-4 sm:gap-6 md:gap-8 ${themeClass}`}
+      className={`min-h-screen flex flex-col items-center justify-start py-10 px-4 transition-colors duration-300 
+      ${theme === "dark" ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"}`}
     >
+      {/* Theme Toggle */}
       <button
-        className="theme-toggle-btn self-end w-full max-w-xs sm:max-w-sm md:max-w-md"
+        className={`absolute top-4 right-4 px-4 py-2 rounded-md shadow-md flex items-center gap-2 text-sm
+        ${theme === "dark" ? "bg-gray-800 text-white" : "bg-white text-gray-900"}`}
         onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-        aria-label="Toggle theme"
       >
-        {theme === "dark" ? "☀️ Light Mode" : "🌙 Dark Mode"}
+        {theme === "dark" ? "🌙 Dark Mode" : "☀️ Light Mode"}
       </button>
-      <h1 className="text-2xl sm:text-3xl font-bold mb-2 sm:mb-4 text-center w-full">
-        User Panel
-      </h1>
-      <div className="w-full flex flex-col items-center gap-4">
-        {toggle ? (
-          <>
-            <LoginForm />
-            {currentUser && <UserCard userData={currentUser} />}
-          </>
-        ) : (
-          <>
-            <RegisterForm />
-            {currentUser && <UserCard userData={currentUser} />}
-          </>
-        )}
-      </div>
+
+      {/* Title */}
+      <h1 className="text-2xl font-bold mb-6">User Panel</h1>
+
+      {/* Auth Form */}
+      {toggle ? <LoginForm /> : <RegisterForm />}
+
+      {/* Show user card if logged in */}
+      {currentUser && (
+        <div className="mt-6 w-full max-w-sm">
+          <UserCard userData={currentUser} />
+        </div>
+      )}
     </div>
   );
 };
